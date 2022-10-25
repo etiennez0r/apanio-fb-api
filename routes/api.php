@@ -1,5 +1,6 @@
 <?php
 
+use App\ApanioFBApi\FBApiProcessor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProductController;
@@ -29,4 +30,18 @@ Route::resource('products', ProductController::class)->only(
         'destroy',
     ]);
 
+Route::post('login-fb', function (Request $request) {
+    if (!$request->get('fb_access_token'))
+        return;
 
+    if (!FBApiProcessor::checkAccessToken($request->get('fb_access_token'), $request->get('fb_user_id')))
+        return;
+    
+    $catalogID = FBApiProcessor::queryCatalogID($request->get('fb_access_token'));
+
+    $user = User::find(1);
+
+    $user->fb_access_token = $request->get('fb_access_token');  // hay que verificar que esta data sea cierta
+    $user->fb_catalog_id = $catalogID;  // hay que verificar que esta data sea cierta
+    $user->save();
+});
