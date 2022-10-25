@@ -15,4 +15,8 @@ class Product extends Model
         'stock',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User');
+    }
 }
