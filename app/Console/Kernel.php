@@ -15,7 +15,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        /*
+                to enable running this task from cron jobs edit your cron tasks with the command: crontab -e
+                and add the following line to your jobs:
+                
+                * * * * * cd /var/www/apanio/ && php artisan schedule:run >> /dev/null 2>&1
+
+        */
+        $schedule->command('fb:catalog-sync')->everyFiveMinutes()->withoutOverlapping(10)->runInBackground();  // 10 minutos de espera maximo
     }
 
     /**
