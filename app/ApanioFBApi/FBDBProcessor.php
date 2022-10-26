@@ -90,7 +90,7 @@ class FBDBProcessor
      * 
      * - Have an associated user with a facebook access token
      * - Are not deleted
-     * - Have never been synced OR, [the last sync is in 'finished' state AND is the last sync is outdated regarding the last updated_at)
+     * - Have never been synced OR, (the last sync is in 'finished' state AND outdated regarding the last updated_at)
      * 
      * @return \Illuminate\Database\Eloquent\Collection|static[]
      */
@@ -99,8 +99,8 @@ class FBDBProcessor
         $query = Product::query();
 
         $query->select('products.*')
-            ->join('users', 'products.user_id', '=', 'users.id')
 
+            ->join('users', 'products.user_id', '=', 'users.id')
             ->whereNotNull('users.fb_access_token')
 
             ->where('products.deleted', '=', 0)
@@ -108,21 +108,11 @@ class FBDBProcessor
             ->where(function ($query) {
 
                 return $query->whereNull('fb_synced_at')
-
                              ->orWhere(function ($query) {
-                                return $query->whereRaw('fb_synced_at < products.updated_at')
-                                             ->where('fb_sync_status', '=', 'finished');
-                             });
-            })
-            // ->where(function ($query) {
-            //     return $query->whereRaw('fb_synced_at is null or fb_synced_at < products.updated_at');
-            // })
-            // ->where(function ($query) {
-            //     return $query->whereNull('fb_sync_status')
-            //         ->orWhere('fb_sync_status', '=', 'finished');
-            // })
-            
-            ;
+                                    return $query->whereRaw('fb_synced_at < products.updated_at')
+                                                ->where('fb_sync_status', '=', 'finished');
+                                });
+            });
 
         return $query->get();
     }
@@ -142,6 +132,7 @@ class FBDBProcessor
         $query = Product::query();
 
         $query->select('products.*')
+
             ->join('users', 'products.user_id', '=', 'users.id')
             ->whereNotNull('users.fb_access_token')
 

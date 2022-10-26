@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Log;
 class FBApiProcessor
 {
     private const APP_ID = '675670963915785';                           // replace with Apanio App ID
-    private const APP_SECRET = '39ba7094e3bcdeee0f067ba119e922b3';      // replace with Apanio App Secret
+    private const APP_SECRET = '';      // replace with Apanio App Secret
     private const API_VERSION = '15.0';                                 // set to current meta Api Graph Version
 
     // required fields to send in the product push to FB and their related field in products table:
